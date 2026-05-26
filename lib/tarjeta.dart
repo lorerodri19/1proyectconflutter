@@ -28,8 +28,6 @@ class Tarjeta extends StatelessWidget {
             //contenido del contenedor 
             //filas
             child: Row(
-              //espacio entre filas 
-              mainAxisAlignment: MainAxisAlignment.start,
               //hijos del contenedor 
               children: [
                 SizedBox(width:125),
