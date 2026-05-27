@@ -20,8 +20,14 @@ class Formulario extends StatefulWidget{
 class _FormularioState extends State<Formulario> {
 //llave formulario 
 final _formkey = GlobalKey<FormState>();
-
+//controladores
 final nombreController = TextEditingController();
+final emailController = TextEditingController();
+final phoneController = TextEditingController();
+final passwordController = TextEditingController();
+//variables del sistema 
+String rol = "Usuario";
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +43,100 @@ final nombreController = TextEditingController();
           key: _formkey,
           child: Column(
             children: [
+              //icono principal
+              const Icon(
+                Icons.account_circle,
+                size: 120,
+                color: Color.fromARGB(255, 141, 230, 40),
+              ),
+
+              const SizedBox(height: 20),
+
               const Text(
                 "Registro Usuario",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 30),
 
+              const SizedBox(height: 30),
+              //nombre
               TextFormField(
                 controller: nombreController,
                 decoration: InputDecoration(
                   labelText: "Nombre Usuario",
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person)
+                  prefixIcon: Icon(Icons.person),
                 ),
+              ),
+
+              const SizedBox(height: 20),
+              //email
+              TextFormField(
+                controller: emailController,
+
+                keyboardType: TextInputType.emailAddress,//va averificar que sea tipo email
+
+                decoration: InputDecoration(
+                  labelText: "Correo Electronico",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
+              ),
+              const SizedBox(height: 20),
+              //telefono
+              TextFormField(
+                controller: phoneController,
+
+                keyboardType:  TextInputType.phone,
+
+                decoration: InputDecoration(
+                  labelText: "telefono",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.phone),
+                ),
+              ),
+              const SizedBox(height: 20),
+              //contraseña
+              TextFormField(
+                controller: passwordController,
+
+                obscureText: true,
+
+                decoration: InputDecoration(
+                  labelText: "contraseñas",
+                  border:  OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              DropdownButtonFormField(
+                value: rol,
+
+                decoration: const InputDecoration(
+                  labelText: "Rol",
+                  border: OutlineInputBorder(),
+                ),
+                items: const[
+                  DropdownMenuItem(
+                    value: "Usuario",
+                    child: Text("Usuario"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Administrador",
+                    child: Text("Administrador"),
+                  ),
+                  DropdownMenuItem(
+                    value: "Cliente",
+                    child: Text("Cliente"),
+                  ),
+                ],
+                onChanged: (value) {
+                    setState(() {
+                      rol = value!;
+                    });
+                  },
               )
+
             ],
           )
         ),
