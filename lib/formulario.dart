@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 class Registrousuario  extends StatelessWidget {
   const Registrousuario ({super.key});
@@ -27,6 +29,7 @@ final phoneController = TextEditingController();
 final passwordController = TextEditingController();
 //variables del sistema 
 String rol = "Usuario";
+DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable nulo 
 
 
   @override
@@ -108,7 +111,7 @@ String rol = "Usuario";
                 ),
               ),
               const SizedBox(height: 20),
-
+              //lista
               DropdownButtonFormField(
                 value: rol,
 
@@ -135,7 +138,36 @@ String rol = "Usuario";
                       rol = value!;
                     });
                   },
-              )
+              ),
+
+              const SizedBox(height: 20), //espacio 
+
+              SizedBox(
+                width: double.infinity, //espacio horizontal completo automatico
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.calendar_month),
+
+                  label: Text(
+                    fechaNacimiento == null
+                    ? "seleccionar Fecha de Nacimiento"
+                    : "Fecha: ${fechaNacimiento!.day}/${fechaNacimiento!.month}/${fechaNacimiento!.year}",
+                  ),
+                  onPressed: () async {
+                    DateTime? pickdate = await showDatePicker(
+                      context: context,
+                      initialDate:DateTime.now(), 
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime(2027),
+                    );
+                    if (fechaNacimiento !=null){
+                      setState(() {
+                        fechaNacimiento = pickdate;
+                      });
+                    }
+                  }
+                  )
+
+              ),
 
             ],
           )
