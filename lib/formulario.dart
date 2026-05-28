@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 class Registrousuario  extends StatelessWidget {
   const Registrousuario ({super.key});
 
@@ -30,7 +31,8 @@ final passwordController = TextEditingController();
 //variables del sistema 
 String rol = "Usuario";
 DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable nulo 
-
+bool aceptaTerminos = false;
+bool notificaciones = false; // false empiza encendido y true empieza apagado
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,12 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty){
+                    return "ingresa tu nombre";
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 20),
@@ -83,6 +91,15 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.email),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty){
+                    return "ingresa tu correo";
+                  }
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)){
+                    return "ingresa un correo electronico valido";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               //telefono
@@ -90,12 +107,24 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
                 controller: phoneController,
 
                 keyboardType:  TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, //solo permite numeros
+                ],
 
                 decoration: InputDecoration(
                   labelText: "telefono",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.phone),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty){
+                    return "ingresa tu numero";
+                  }
+                  if (value.length < 10 ){
+                    return "el numero de telefono debe tener 10 digitos ";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               //contraseña
@@ -105,10 +134,19 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
                 obscureText: true,
 
                 decoration: InputDecoration(
-                  labelText: "contraseñas",
+                  labelText: "contraseña",
                   border:  OutlineInputBorder(),
                   prefixIcon: Icon(Icons.lock),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty){
+                    return "ingresa una contraseña";
+                  }
+                  if(value.length < 6) {
+                    return "la contraseña debe tener al menos 6 caracteres";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               //lista
@@ -141,7 +179,7 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
               ),
 
               const SizedBox(height: 20), //espacio 
-
+              //calendario
               SizedBox(
                 width: double.infinity, //espacio horizontal completo automatico
                 child: ElevatedButton.icon(
@@ -168,6 +206,51 @@ DateTime? fechaNacimiento; // este tipo de dato puede estar vacio "?" variable n
                   )
 
               ),
+
+              const SizedBox(height: 30),
+              
+              //checkbox para terminos y condiciones 
+              CheckboxListTile(
+                title: const Text("Acepto los terminos y condiciones"),
+                value: aceptaTerminos, 
+                onChanged: (value){
+                  setState(() {
+                    aceptaTerminos = value!;//actualizar el estado del checkbox
+                  });
+                }),
+                const SizedBox(height: 10),
+                //switch para recibir notificaciones 
+                SwitchListTile(
+                  title: const Text("recibir notificaciones"),
+
+                  value: notificaciones, 
+                  onChanged: (value){
+                    setState(() {
+                      notificaciones = value;
+                    });
+                  }
+                  ),
+
+                const SizedBox(height: 20),
+                //boton de registro
+                SizedBox(
+                  width: double.infinity, //espacio horizontal completo automaticamente
+                  height: 50, //altura fija para el boton 
+
+                  child: ElevatedButton(
+                    onPressed: (){
+                      //aqui puedes agregar la logica para validar el formulario y registrar al usuario 
+                      if (_formkey.currentState!.validate() && aceptaTerminos){
+                        //logica
+                        print("Formulario Valido. Procesar registro...");
+                      }
+                      else{
+                        print("Por favor, complete el formulario y acepte los terminos.");
+                      }
+                    }, 
+                    child: const Text("Registrar"),
+                    )
+                )
 
             ],
           )
